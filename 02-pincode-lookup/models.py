@@ -5,4 +5,4 @@ class PincodeRequest(BaseModel):
    @field_validator("pincode")
    @classmethod
    def validate_pincode():
-
+      pass
