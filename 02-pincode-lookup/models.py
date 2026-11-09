@@ -5,6 +5,7 @@ class PincodeRequest(BaseModel):
 
    # pincode must be exactly 6 digits
    @field_validator("pincode")
+   # cls is the object of the class
    @classmethod
    def validate_pincode(cls,value):
       if len(value)!=6 or not value.isdigit():
