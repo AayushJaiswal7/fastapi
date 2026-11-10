@@ -25,7 +25,7 @@ def root():
 @app.get("/pincode/{code}",response_model=LocationResponse)
 def lookup_pincode(code:str):
    if len(code)!=6 or not code.isdigit():
-      raise InvalidPincodeError(code,"Must be exactly 6 digit")
+      raise InvalidPincodeError(code,"Must be exactly 6 digit") #handled by the registered handler which is "pincode_not_found_handler"
    if code not in pincode_db:
       raise PinCodeNotFoundError(code)
    return pincode_db[code]
