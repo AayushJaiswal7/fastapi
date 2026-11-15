@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from database import create_tables
-
+from routes.reviews import router as reviews_router
 @asynccontextmanager
 async def lifespan(app:FastAPI):
    create_tables()
@@ -14,6 +14,8 @@ app=FastAPI(
    lifespan=lifespan
 )
 
+app.include_router(reviews_router)
+
 @app.get("/")
 def root():
-   return {"message":"Welcom to rangmanch review API"}
+   return {"message":"Welcome to rangmanch review API"}
