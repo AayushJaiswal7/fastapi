@@ -25,7 +25,5 @@ class ReviewRead(SQLModel):
    created_at: datetime
 
 class ReviewUpdate(SQLModel):
-   pass
-   id:int
    rating:Optional[int]=Field(default=None,ge=1,le=5)
    comment:Optional[str]=None
