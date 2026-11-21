@@ -44,6 +44,33 @@ def get_average_rating(play_name:str,session:Session=Depends(get_session)
 
    if total_reviews==0:
       raise HTTPException(status_code=404,detail=f"No review found for {play_name}")
-   return {"play_name":play_name}  
+   return {"play_name":play_name,
+           "average_rating":round(avg_rating,2),
+           "total_reviews":total_reviews}  
    
- 
+@router.get("/{review_id}",response_model=ReviewRead)
+def get_review(review_id:int,session:Session=Depends(get_session)):
+   review=session.get(Review,review_id)
+   if not review:
+      raise HTTPException(status_code=404,detail="No review")
+
+
+
+@router.patch("/{review_id}",response_model=ReviewRead)
+def update_review(review_id:int,update:ReviewUpdate,session:Session=Depends(get_session)):
+   review=session.get(Review,review_id)
+   if not review:
+      raise HTTPException(status_code=404,detail="No review")
+   
+   update_data=update.model_dump(exclude_unset=True)
+   for key, value in update_data.items():
+      setattr(review,key,value)
+
+   session.add(review)
+   session.commit
+   session.refresh(review)
+   return review
+
+   
+
+   
