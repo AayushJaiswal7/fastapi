@@ -1,7 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter,HTTPException
 from sqlmodel import Session, select, func
 from models import Review , ReviewCreate ,ReviewRead,ReviewUpdate
-from database import get_session
+from database import get_session,Depends,Query
+
 router = APIRouter(prefix="/review",tags=["reviews"])
 
 # /review
@@ -29,3 +30,20 @@ def list_reviews(
 
    reviews=session.exec(query).all()
    return reviews
+
+@router.get("/average/{play_name}")
+def get_average_rating(play_name:str,session:Session=Depends(get_session)
+):
+   result=session.exec(
+      select(func.avg(Review.rating)).where(
+         Review.play_name==play_name
+      )
+   ).first()
+
+   avg_rating,total_reviews = result
+
+   if total_reviews==0:
+      raise HTTPException(status_code=404,detail=f"No review found for {play_name}")
+   return {"play_name":play_name}  
+   
+ 
