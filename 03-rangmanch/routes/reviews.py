@@ -71,6 +71,17 @@ def update_review(review_id:int,update:ReviewUpdate,session:Session=Depends(get_
    session.refresh(review)
    return review
 
+
+@router.delete("/{review_id}")
+def delete_review(review_id:int,session:Session=Depends(get_session)):
+   review=session.get(Review,review_id)
+   if not review:
+      raise HTTPException(status_code=404,detail="No review")
+   
+   session.delete(review)
+   session.commit()
+   return {"message":"Review deleted"}
+
    
 
    
