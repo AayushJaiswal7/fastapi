@@ -1,7 +1,8 @@
-from fastapi import APIRouter,HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Query
 from sqlmodel import Session, select, func
-from models import Review , ReviewCreate ,ReviewRead,ReviewUpdate
-from database import get_session,Depends,Query
+
+from models import Review, ReviewCreate, ReviewRead, ReviewUpdate
+from database import get_session
 
 router = APIRouter(prefix="/review",tags=["reviews"])
 
@@ -53,7 +54,7 @@ def get_review(review_id:int,session:Session=Depends(get_session)):
    review=session.get(Review,review_id)
    if not review:
       raise HTTPException(status_code=404,detail="No review")
-
+   return review
 
 
 @router.patch("/{review_id}",response_model=ReviewRead)
